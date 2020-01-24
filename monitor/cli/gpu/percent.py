@@ -8,7 +8,7 @@
 # You should have received a copy of the Apache License along with this program.
 # If not, see <https://www.apache.org/licenses/LICENSE-2.0>.
 
-"""Monitor CPU usage."""
+"""Monitor GPU volatile utilization."""
 
 # type annotations
 from __future__ import annotations
@@ -18,22 +18,21 @@ import time
 import functools
 
 # internal libs
-from ..core.exceptions import log_and_exit
-from ..core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ..__meta__ import __appname__, __copyright__, __website__, __license__
+from ...core.stat import NvidiaStat
+from ...core.exceptions import log_and_exit
+from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
+from ...__meta__ import __appname__, __copyright__, __website__, __license__
 
 # external libs
-import psutil
 from cmdkit.app import Application, exit_status
 from cmdkit.cli import Interface, ArgumentError
 
 
-# program name is constructed from module file name
-PROGRAM = f'{__appname__} cpu'
+PROGRAM = f'{__appname__} gpu percent'
 PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
-usage: {PROGRAM} [--total | --all-cores] [--sample-rate SECONDS]
+usage: {PROGRAM} [--sample-rate SECONDS]
        {PADDING} [--plain | --csv [--no-header]]
        {PADDING} [--help]
 
@@ -52,8 +51,6 @@ HELP = f"""\
 {USAGE}
 
 options:
--t, --total                    Show values for total cpu usage (default).
--a, --all-cores                Show values for individual cores.
 -s, --sample-rate  SECONDS     Time between samples (default: 1).
     --plain                    Print messages in syslog format (default).
     --csv                      Print messages in CSV format.
@@ -65,35 +62,17 @@ options:
 
 
 # initialize module level logger
-log = Logger.with_name('cpu')
+log = Logger.with_name('gpu.percent')
 
 
-def cpu_total(callback, template: str = '{value}') -> None:
-    """Log the total CPU utilization."""
-    value = psutil.cpu_percent()
-    callback(template.format(value=value))
-
-
-def cpu_per_core(callback, template: str = '[{i}] {value}') -> None:
-    """Log the CPU utilization per core."""
-    for i, value in enumerate(psutil.cpu_percent(percpu=True)):
-        callback(template.format(i=i, value=value))
-
-
-class CPU(Application):
-    """Monitor CPU usage."""
+class GPUPercent(Application):
+    """Monitor GPU volatile utilization."""
 
     ALLOW_NOARGS = True
     interface = Interface(PROGRAM, USAGE, HELP)
 
     sample_rate: int = 1
     interface.add_argument('-s', '--sample-rate', type=int, default=sample_rate)
-
-    total: bool = False
-    all_cores: bool = False
-    core_interface = interface.add_mutually_exclusive_group()
-    core_interface.add_argument('-t', '--total', action='store_true')
-    core_interface.add_argument('-a', '--all-cores', action='store_true')
 
     format_plain: bool = True
     format_csv: bool = False
@@ -110,7 +89,7 @@ class CPU(Application):
     }
 
     def run(self) -> None:
-        """Run cpu monitor."""
+        """Run monitor."""
 
         if not self.format_csv and self.no_header:
             raise ArgumentError('--no-header only applies to --csv mode.')
@@ -119,23 +98,10 @@ class CPU(Application):
         if self.format_csv:
             log.handlers[0] = CSV_HANDLER
             if not self.no_header:
-                if not self.all_cores:
-                    print('timestamp,hostname,resource,cpu_percent')
-                else:
-                    print('timestamp,hostname,resource,cpu_id,cpu_percent')
-
-        if not self.all_cores:
-            log_usage = functools.partial(cpu_total, log.debug)
-        else:
-            log_usage = functools.partial(cpu_per_core, log.debug)
+                print('timestamp,hostname,resource,gpu_id,gpu_percent')
 
         while True:
             time.sleep(self.sample_rate)
-            log_usage()
-
-    def __enter__(self) -> CPU:
-        """Initialize resources."""
-        return self
-
-    def __exit__(self, *exc) -> None:
-        """Release resources."""
+            stat = NvidiaStat.from_cmd()
+            for gpu_id, gpu_percent in enumerate(stat.usage):
+                log.debug(f'[{gpu_id}] {gpu_percent}')

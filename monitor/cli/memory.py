@@ -34,8 +34,8 @@ PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
 usage: {PROGRAM} [--percent | --actual] [--sample-rate SECONDS] [--human-readable]
-       {PADDING} [--plain | --csv]
-       {PADDING} [--help] [--version]
+       {PADDING} [--plain | --csv [--no-header]]
+       {PADDING} [--help]
 
 {__doc__}\
 """
@@ -58,6 +58,7 @@ options:
 -H, --human-readable            Human readable values (e.g., "8.2G").
     --plain                     Print messages in syslog format (default).
     --csv                       Print messages in CSV format.
+    --no-header                 Suppress printing header in CSV mode.
 -h, --help                      Show this message and exit.
 
 {EPILOG}\
@@ -103,6 +104,8 @@ class Memory(Application):
     format_interface.add_argument('--csv', action='store_true', dest='format_csv')
     format_interface.add_argument('--plain', action='store_true', dest='format_plain')
 
+    no_header: bool = False
+    interface.add_argument('--no-header', action='store_true')
 
     exceptions = {
         RuntimeError: functools.partial(log_and_exit, logger=log.critical,
@@ -112,6 +115,9 @@ class Memory(Application):
     def run(self) -> None:
         """Run cpu monitor."""
 
+        if not self.format_csv and self.no_header:
+            raise ArgumentError('--no-header only applies to --csv mode.')
+
         mem_attr = 'used' if self.memory_actual else 'percent'
         if not self.memory_actual and self.human_readable:
             raise ArgumentError('"--human-readable" only applies to "--actual" values.')
@@ -119,7 +125,8 @@ class Memory(Application):
         log.handlers[0] = PLAIN_HANDLER
         if self.format_csv:
             log.handlers[0] = CSV_HANDLER
-            print(f'timestamp,hostname,resource,memory_{mem_attr}')
+            if not self.no_header:
+                print(f'timestamp,hostname,resource,memory_{mem_attr}')
 
         formatter = functools.partial(format_size, scale_units=self.human_readable)
         while True:

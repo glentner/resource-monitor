@@ -25,7 +25,7 @@ from ..__meta__ import __appname__, __copyright__, __website__, __license__
 # external libs
 import psutil
 from cmdkit.app import Application, exit_status
-from cmdkit.cli import Interface
+from cmdkit.cli import Interface, ArgumentError
 
 
 # program name is constructed from module file name
@@ -34,7 +34,7 @@ PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
 usage: {PROGRAM} [--total | --all-cores] [--sample-rate SECONDS]
-       {PADDING} [--plain | --csv]
+       {PADDING} [--plain | --csv [--no-header]]
        {PADDING} [--help]
 
 {__doc__}\
@@ -57,6 +57,7 @@ options:
 -s, --sample-rate  SECONDS     Time between samples (default: 1).
     --plain                    Print messages in syslog format (default).
     --csv                      Print messages in CSV format.
+    --no-header                Suppress printing header in CSV mode.
 -h, --help                     Show this message and exit.
 
 {EPILOG}\
@@ -100,6 +101,9 @@ class CPU(Application):
     format_interface.add_argument('--plain', action='store_true', dest='format_plain')
     format_interface.add_argument('--csv', action='store_true', dest='format_csv')
 
+    no_header: bool = False
+    interface.add_argument('--no-header', action='store_true')
+
     exceptions = {
         RuntimeError: functools.partial(log_and_exit, logger=log.critical,
                                         status=exit_status.runtime_error),
@@ -108,13 +112,17 @@ class CPU(Application):
     def run(self) -> None:
         """Run cpu monitor."""
 
+        if not self.format_csv and self.no_header:
+            raise ArgumentError('--no-header only applies to --csv mode.')
+
         log.handlers[0] = PLAIN_HANDLER
         if self.format_csv:
             log.handlers[0] = CSV_HANDLER
-            if not self.all_cores:
-                print('timestamp,hostname,resource,percent_usage')
-            else:
-                print('timestamp,hostname,resource,cpu_id,percent_usage')
+            if not self.no_header:
+                if not self.all_cores:
+                    print('timestamp,hostname,resource,cpu_percent')
+                else:
+                    print('timestamp,hostname,resource,cpu_id,cpu_percent')
 
         if not self.all_cores:
             log_usage = functools.partial(cpu_total, log.debug)

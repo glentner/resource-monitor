@@ -12,6 +12,15 @@
 
 # standard libs
 import sys
+import platform
+
+# ignore broken pipes
+if platform.system() == 'Windows':
+    # FIXME: how do we ignore broken pipes on windows?
+    pass
+else:
+    from signal import signal, SIGPIPE, SIG_DFL
+    signal(SIGPIPE, SIG_DFL)
 
 # internal libs
 from ..core.logging import Logger

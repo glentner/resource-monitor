@@ -11,7 +11,7 @@
 """Package metadata for resource-monitor."""
 
 __appname__     = 'monitor'
-__version__     = '1.0.0'
+__version__     = '1.0.1'
 __authors__     = 'Geoffrey Lentner'
 __contact__     = 'glentner@purdue.edu'
 __license__     = 'Apache Software License 2.0'

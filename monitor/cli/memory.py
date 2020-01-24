@@ -20,7 +20,7 @@ import functools
 # internal libs
 from ..core.exceptions import log_and_exit
 from ..core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ..__meta__ import __copyright__, __website__, __license__
+from ..__meta__ import __appname__, __copyright__, __website__, __license__
 
 # external libs
 import psutil
@@ -29,7 +29,7 @@ from cmdkit.cli import Interface, ArgumentError
 
 
 # program name is constructed from module file name
-PROGRAM = 'monitor memory'
+PROGRAM = f'{__appname__} memory'
 PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\

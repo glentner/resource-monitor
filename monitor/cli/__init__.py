@@ -32,7 +32,7 @@ RESOURCES = {
     'memory': Memory,
 }
 
-PROGRAM = 'monitor'
+PROGRAM = __appname__
 PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\

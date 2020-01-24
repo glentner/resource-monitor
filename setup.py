@@ -14,7 +14,7 @@
 from setuptools import setup, find_packages
 
 # metadata
-from monitor.__meta__ import (__appname__, __version__, __authors__,
+from monitor.__meta__ import (__version__, __authors__,
                               __contact__, __license__, __description__,
                               __keywords__, __website__)
 
@@ -24,7 +24,7 @@ with open('README.rst', mode='r') as readme:
 
 
 setup(
-    name                 = __appname__,
+    name                 = 'resource-monitor',
     version              = __version__,
     author               = __authors__,
     author_email         = __contact__,

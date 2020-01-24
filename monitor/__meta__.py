@@ -10,7 +10,7 @@
 
 """Package metadata for resource-monitor."""
 
-__appname__     = 'resource-monitor'
+__appname__     = 'monitor'
 __version__     = '1.0.0'
 __authors__     = 'Geoffrey Lentner'
 __contact__     = 'glentner@purdue.edu'

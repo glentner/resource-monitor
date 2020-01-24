@@ -8,7 +8,7 @@
 # You should have received a copy of the Apache License along with this program.
 # If not, see <https://www.apache.org/licenses/LICENSE-2.0>.
 
-"""Monitor main memory usage."""
+"""Monitor CPU memory utilization."""
 
 # type annotations
 from __future__ import annotations
@@ -18,9 +18,9 @@ import time
 import functools
 
 # internal libs
-from ..core.exceptions import log_and_exit
-from ..core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ..__meta__ import __appname__, __copyright__, __website__, __license__
+from ...core.exceptions import log_and_exit
+from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
+from ...__meta__ import __appname__, __copyright__, __website__, __license__
 
 # external libs
 import psutil
@@ -28,8 +28,7 @@ from cmdkit.app import Application, exit_status
 from cmdkit.cli import Interface, ArgumentError
 
 
-# program name is constructed from module file name
-PROGRAM = f'{__appname__} memory'
+PROGRAM = f'{__appname__} cpu memory'
 PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
@@ -66,7 +65,7 @@ options:
 
 
 # initialize module level logger
-log = Logger.with_name('memory')
+log = Logger.with_name('cpu.memory')
 
 
 SCALES = ['', 'K', 'M', 'G', 'T']
@@ -80,8 +79,8 @@ def format_size(num: float, scale_units: bool = False, divisor: int = 1024) -> s
         num /= divisor
 
 
-class Memory(Application):
-    """Monitor main memory usage."""
+class CPUMemory(Application):
+    """Monitor CPU memory utilization."""
 
     ALLOW_NOARGS = True  # no usage behavior
     interface = Interface(PROGRAM, USAGE, HELP)
@@ -113,7 +112,7 @@ class Memory(Application):
     }
 
     def run(self) -> None:
-        """Run cpu monitor."""
+        """Run monitor."""
 
         if not self.format_csv and self.no_header:
             raise ArgumentError('--no-header only applies to --csv mode.')
@@ -133,10 +132,3 @@ class Memory(Application):
             time.sleep(self.sample_rate)
             value = getattr(psutil.virtual_memory(), mem_attr)
             log.debug(formatter(value))
-
-    def __enter__(self) -> Memory:
-        """Initialize resources."""
-        return self
-
-    def __exit__(self, *exc) -> None:
-        """Release resources."""

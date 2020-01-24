@@ -34,7 +34,7 @@ setup(
     url                  = __website__,
     packages             = find_packages(),
     long_description     = long_description,
-    classifiers          = ['Development Status :: 4 - Beta',
+    classifiers          = ['Development Status :: 5 - Production/Stable',
                             'Programming Language :: Python :: 3',
                             'Programming Language :: Python :: 3.7',
                             'Programming Language :: Python :: 3.8',

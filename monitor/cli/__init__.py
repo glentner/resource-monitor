@@ -33,19 +33,20 @@ from cmdkit.app import Application
 from cmdkit.cli import Interface, ArgumentError
 
 # resource commands
-from .cpu import CPU
-from .memory import Memory
+from .cpu import CPUDevice
+from .gpu import GPUDevice
 
-RESOURCES = {
-    'cpu': CPU,
-    'memory': Memory,
+
+DEVICES = {
+    'cpu': CPUDevice,
+    'gpu': GPUDevice,
 }
 
 PROGRAM = __appname__
 PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
-usage: {PROGRAM} <resource> [<args>...]
+usage: {PROGRAM} <device> <resource> [<args>...]
        {PADDING} [--help] [--version]
 
 {__description__}\
@@ -62,9 +63,9 @@ Copyright {__copyright__}
 HELP = f"""\
 {USAGE}
 
-resources:
-cpu                {CPU.__doc__}
-memory             {Memory.__doc__}
+devices:
+cpu                {CPUDevice.__doc__}
+gpu                {GPUDevice.__doc__}
 
 options:
 -h, --help         Show this message and exit.
@@ -77,8 +78,7 @@ learn more about their usage.
 """
 
 
-# initialize module level logger
-log = Logger.with_name(__appname__)
+log = Logger()
 
 
 class ResourceMonitor(Application):
@@ -87,8 +87,8 @@ class ResourceMonitor(Application):
     interface = Interface(PROGRAM, USAGE, HELP)
     interface.add_argument('-v', '--version', version=__version__, action='version')
 
-    resource: str = None
-    interface.add_argument('resource')
+    device: str = None
+    interface.add_argument('device')
 
     exceptions = {
         CompletedCommand: (lambda exc: int(exc.args[0])),
@@ -96,14 +96,13 @@ class ResourceMonitor(Application):
 
     def run(self) -> None:
         """Show usage/help/version or defer to group."""
-
-        if self.resource in RESOURCES:
-            status = RESOURCES[self.resource].main(sys.argv[2:])
+        if self.device in DEVICES:
+            status = DEVICES[self.device].main(sys.argv[2:3])
             raise CompletedCommand(status)
         else:
-            raise ArgumentError(f'"{self.resource}" is not a resource.')
+            raise ArgumentError(f'"{self.device}" is not a device.')
 
 
 def main() -> int:
     """Entry-point for resource-monitor command line interface."""
-    return ResourceMonitor.main(sys.argv[1:2])  # only the group if present
+    return ResourceMonitor.main(sys.argv[1:2])

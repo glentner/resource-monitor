@@ -40,7 +40,6 @@ setup(
                             'Programming Language :: Python :: 3.8',
                             'Operating System :: POSIX :: Linux',
                             'Operating System :: MacOS',
-                            'Operating System :: Microsoft :: Windows 10',
                             'Intended Audience :: Information Technology',
                             'Intended Audience :: System Administrators',
                             'License :: OSI Approved :: Apache Software License',

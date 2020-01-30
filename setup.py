@@ -40,6 +40,7 @@ setup(
                             'Programming Language :: Python :: 3.8',
                             'Operating System :: POSIX :: Linux',
                             'Operating System :: MacOS',
+                            'Operating System :: Microsoft :: Windows',
                             'Intended Audience :: Information Technology',
                             'Intended Audience :: System Administrators',
                             'License :: OSI Approved :: Apache Software License',
@@ -50,4 +51,7 @@ setup(
     extras_require       = {
         'dev': ['ipython', 'pytest', 'hypothesis', 'pylint', 'sphinx',
                 'sphinx-rtd-theme', 'twine']},
+    data_files = [
+        ('share/man/man1', ['man/man1/monitor.1', ]),
+    ],
 )

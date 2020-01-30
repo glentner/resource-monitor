@@ -1,0 +1,257 @@
+.\" Man page generated from reStructuredText.
+.
+.TH "MONITOR" "1" "Jan 30, 2020" "" "Resource Monitor"
+.SH NAME
+monitor \- system resource monitoring and telemetry
+.
+.nr rst2man-indent-level 0
+.
+.de1 rstReportMargin
+\\$1 \\n[an-margin]
+level \\n[rst2man-indent-level]
+level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
+-
+\\n[rst2man-indent0]
+\\n[rst2man-indent1]
+\\n[rst2man-indent2]
+..
+.de1 INDENT
+.\" .rstReportMargin pre:
+. RS \\$1
+. nr rst2man-indent\\n[rst2man-indent-level] \\n[an-margin]
+. nr rst2man-indent-level +1
+.\" .rstReportMargin post:
+..
+.de UNINDENT
+. RE
+.\" indent \\n[an-margin]
+.\" old: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.nr rst2man-indent-level -1
+.\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
+.in \\n[rst2man-indent\\n[rst2man-indent-level]]u
+..
+.SH SYNOPSIS
+.sp
+monitor \fIdevice\fP \fIresource\fP [\-\-sample\-rate \fISECONDS\fP] [\-\-csv [\-\-no\-header]]
+.SH DESCRIPTION
+.sp
+The \fBmonitor\fP utility collects telemetry on system resources. Metrics are printed to
+\fIstdout\fP at regular intervals. Resources are organized under "cpu" or "gpu" \fIdevice\fP
+groups. All resources share some \fBglobal options\fP, see below. The following list the
+possible invocations and associated specific options.
+.INDENT 0.0
+.INDENT 3.5
+.INDENT 0.0
+.TP
+.B monitor cpu percent [\-\-help]
+Collect telemetry on CPU core utilization.
+.INDENT 7.0
+.TP
+.B \-\-total
+Report metrics as a total across all cores (default).
+.TP
+.B \-\-all\-cores
+Report metrics on a per\-core basis.
+.UNINDENT
+.TP
+.B monitor cpu memory [\-\-help]
+Collect telemetry on CPU memory utilization.
+.INDENT 7.0
+.TP
+.B \-\-percent
+Report metrics as a percent of total available memory (default).
+.TP
+.B \-\-actual
+Report metrics as actual memory allocated (in bytes).
+.TP
+.B \-H\fP,\fB  \-\-human\-readable
+Report metrics in a human readable format with units (e.g., "8.2G").
+.UNINDENT
+.TP
+.B monitor gpu percent [\-\-help]
+Collect telemetry on GPU percent utilization.
+.TP
+.B monitor gpu memory [\-\-help]
+Collect telemetry on GPU percent memory utilization.
+.TP
+.B monitor gpu power [\-\-help]
+Collect telemetry on GPU percent power consumption.
+.TP
+.B monitor gpu temp [\-\-help]
+Collect telemetry on GPU temperature (Celsius).
+.UNINDENT
+.UNINDENT
+.UNINDENT
+.SH GLOBAL OPTIONS
+.INDENT 0.0
+.TP
+.B \-s, \-\-sample\-rate \fISECONDS\fP
+The time interval between consecutive samples (default: 1 second).
+.UNINDENT
+.INDENT 0.0
+.TP
+.B \-\-plain
+Print messages in log format (default).
+.TP
+.B \-\-csv
+Print messages in CSV format. The header is automatically included in the first line
+of output. The field names are consistent between resource types with the exception
+of the last one or two fields. For the \fB\-\-all\-cores\fP option with "cpu" and any
+of the "gpu" resources, a \fBcpu_id\fP or \fBgpu_id\fP is included. The last column is
+specific to the resource being monitored. See also: \fB\-\-no\-header\fP\&.
+.TP
+.B \-\-no\-header
+Suppress printing the header in CSV mode (see \fB\-\-csv\fP). This is useful when
+appending data to a single file from one or more sources. See the distributed
+computing examples below.
+.TP
+.B \-h\fP,\fB  \-\-help
+Show help message and exit.
+.TP
+.B \-v\fP,\fB  \-\-version
+Show the version number and exit.
+.UNINDENT
+.SH EXAMPLES
+.sp
+Monitor CPU on a per\-core basis on a 10 second interval.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ monitor cpu percent \-\-all\-cores \-\-sample\-rate 10
+
+2020\-01\-30 12:55:55.521 some\-hostname.local monitor.cpu.percent [0] 7.5
+2020\-01\-30 12:55:55.522 some\-hostname.local monitor.cpu.percent [1] 2.3
+2020\-01\-30 12:55:55.522 some\-hostname.local monitor.cpu.percent [2] 8.5
+2020\-01\-30 12:55:55.522 some\-hostname.local monitor.cpu.percent [3] 0.8
+2020\-01\-30 12:56:05.525 some\-hostname.local monitor.cpu.percent [0] 8.5
+2020\-01\-30 12:56:05.525 some\-hostname.local monitor.cpu.percent [1] 2.3
+2020\-01\-30 12:56:05.525 some\-hostname.local monitor.cpu.percent [2] 8.6
+2020\-01\-30 12:56:05.526 some\-hostname.local monitor.cpu.percent [3] 0.8
+\&...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Monitor CPU memory in actual bytes used and output in CSV format.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ monitor cpu memory \-\-actual \-\-csv
+
+timestamp,hostname,resource,memory_used
+2020\-01\-30 12:58:21.476,some\-hostname.local,cpu.memory,9707892736
+2020\-01\-30 12:58:22.479,some\-hostname.local,cpu.memory,9706946560
+2020\-01\-30 12:58:23.480,some\-hostname.local,cpu.memory,9724190720
+2020\-01\-30 12:58:24.484,some\-hostname.local,cpu.memory,9726636032
+\&...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Monitor GPU utilization on a per\-GPU basis on a 10 second interval and log to a file.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ monitor gpu percent \-\-sample\-rate 10 >gpu.memory.log
+$ head \-8 gpu.memory.log
+
+2020\-01\-30 13:04:22.938 node\-001.cluster monitor.gpu.percent [0] 79.0
+2020\-01\-30 13:04:22.938 node\-001.cluster monitor.gpu.percent [1] 0.0
+2020\-01\-30 13:04:22.938 node\-001.cluster monitor.gpu.percent [2] 0.0
+2020\-01\-30 13:04:22.938 node\-001.cluster monitor.gpu.percent [3] 87.0
+2020\-01\-30 13:04:33.196 node\-001.cluster monitor.gpu.percent [0] 72.0
+2020\-01\-30 13:04:33.196 node\-001.cluster monitor.gpu.percent [1] 0.0
+2020\-01\-30 13:04:33.196 node\-001.cluster monitor.gpu.percent [2] 0.0
+2020\-01\-30 13:04:33.196 node\-001.cluster monitor.gpu.percent [3] 90.0
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Monitor core utilization within a distributed computing context.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ mpiexec \-machinefile <(sort \-u $NODEFILE) \e
+      monitor cpu percent \-\-all\-cores
+
+2020\-01\-30 13:17:50.980 node\-001.cluster monitor.cpu.percent [0] 100.0
+2020\-01\-30 13:17:50.980 node\-001.cluster monitor.cpu.percent [1] 1.0
+\&...
+2020\-01\-30 13:17:51.208 node\-002.cluster monitor.cpu.percent [0] 100.0
+2020\-01\-30 13:17:51.208 node\-002.cluster monitor.cpu.percent [1] 100.0
+\&...
+2020\-01\-30 13:17:51.294 node\-003.cluster monitor.cpu.percent [0] 100.0
+2020\-01\-30 13:17:51.295 node\-003.cluster monitor.cpu.percent [1] 100.0
+\&...
+2020\-01\-30 13:17:51.319 node\-004.cluster monitor.cpu.percent [0] 100.0
+2020\-01\-30 13:17:51.320 node\-004.cluster monitor.cpu.percent [1] 100.0
+\&...
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.sp
+Monitor percent main memory utilization within a distributed computing context, as a
+background task, and in CSV format. Basically, the produced headers will arrive from each
+node, suppress them with \fB\-\-no\-header\fP\&. Create a single header by just slicing it off
+the top of an initial invocation. Collect the process ID so the task can be interrupted
+at then end of your job.
+.INDENT 0.0
+.INDENT 3.5
+.sp
+.nf
+.ft C
+$ monitor cpu memory \-\-csv | head \-1 >log/resource.mem.csv
+$ mpiexec \-machinefile <(sort \-u $NODEFILE) \e
+      monitor cpu memory \-\-csv \-\-no\-header >>log/resource.mem.csv &
+$ MEM_PID=$!
+
+\&...
+
+$ kill \-s INT $MEM_PID
+.ft P
+.fi
+.UNINDENT
+.UNINDENT
+.SH RECOMMENDATIONS
+.INDENT 0.0
+.IP \(bu 2
+If collecting data for benchmarking/profiling/scaling purposes (regarding CPU/memory in particular),
+it may be appropriate to also collect data in the absense of your application as a null\-scenario.
+This can approximate a "background noise" that can modeled and subtracted.
+.UNINDENT
+.SH CAVEATS
+.INDENT 0.0
+.IP \(bu 2
+\fBmonitor\fP merely samples data made available by other libraries or command line
+tools. In the case of CPU resources the \fBpsutil\fP library in Python. In the case of
+GPU resources the output of the \fBnvidia\-smi\fP tool. Metrics are reported with regard
+to the whole system, NOT JUST YOUR APPLICATION.
+.IP \(bu 2
+For GPU resources, currently only NVIDIA GPUs are supported per \fBnvidia\-smi\fP\&.
+However, code has been included that makes it trivial to support additional resources
+that report via some command line invocation (i.e., some other GPU provider).
+.IP \(bu 2
+Sampling more frequently than 1 second is an error. The CPU percent utilization is
+a time averaged metric subject to how frequently it is sampled.
+.UNINDENT
+.SH SEE ALSO
+.sp
+nvidia\-smi(1), head(1), mpiexec(1), sort(1)
+.SH AUTHOR
+Geoffrey Lentner <glentner@purdue.edu>.
+.SH COPYRIGHT
+2020 Geoffrey Lentner
+.\" Generated by docutils manpage writer.
+.

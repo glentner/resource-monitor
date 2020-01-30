@@ -49,5 +49,5 @@ setup(
     install_requires     = ['cmdkit>=1.2.1', 'logalpha>=2.0.2', 'psutil'],
     extras_require       = {
         'dev': ['ipython', 'pytest', 'hypothesis', 'pylint', 'sphinx',
-                'sphinx-rtd-theme']},
+                'sphinx-rtd-theme', 'twine']},
 )

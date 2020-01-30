@@ -18,6 +18,7 @@ A simple cross-platform system resource monitor.
 
 Installation
 ------------
+
 For basic installation use Pip, other methods outlined via the documentation.
 
 .. code-block:: bash
@@ -27,10 +28,7 @@ For basic installation use Pip, other methods outlined via the documentation.
 
 Documentation
 -------------
-The command line interface is self-documenting with ``--help``. You can
-access additional information and usage examples online at
+
+The command line interface is self-documenting with ``--help``. For detailed usage,
+see the manual page ``man monitor``. Documentation is also available online at
 `resource-monitor.readthedocs.io <https://resource-monitor.readthedocs.io>`_
-
-.. code-block:: bash
-
-    monitor --help

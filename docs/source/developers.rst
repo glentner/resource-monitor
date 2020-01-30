@@ -1,0 +1,53 @@
+For Developers
+==============
+
+
+Roadmap
+-------
+
+* Integrate additional GPU providers.
+* Explore additional resources (e.g., filesystem).
+
+
+Contributing
+------------
+
+Development of **monitor** happens on `Github <https://github.com/glentner/monitor>`_.
+Contributions are welcome in the form of suggestions for additional features, *Pull
+Requests* with new features or bug fixes, etc. If you find bugs or have questions, open
+an *Issue*.
+
+
+Guide
+-----
+
+The **monitor** command line interface is written in Python and uses the **psutil**
+library. Additional resources may be possible to collect but may not necessarily be
+easily made cross-platform.
+
+The GPU functionality is simply a wrapper around command line tools, currently just
+``nvidia-smi``. In the library, this has been implemented by a fully generalized notion
+of a *Status* object. In principle, anything that could conceivably be invoked on the
+command line need only have a parser method implemented. For example:
+
+.. code-block:: python
+
+    class OpenFileStat(StatBase):
+        """Report the number of open files."""
+
+        count: int = None
+
+        @classmethod
+        def from_cmd(self) -> OpenFileStat:
+            """Initialize via `lsof -u $USER`."""
+            return super().from_cmd('lsof -u ' + getpass.getuser())
+
+        @classmethod
+        def parse_text(block: str) -> Dict[str, int]:
+            """Count lines in the output."""
+            return {'count': len(block.strip().split('\n'))}
+
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Contents:

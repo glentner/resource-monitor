@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Resource Monitor'
-copyright = '2020, Geoffrey Lentner'
+copyright = '2020 Geoffrey Lentner'
 author = 'Geoffrey Lentner'
 
 # The full version, including alpha/beta/rc tags
-release = '1.2.0'
+release = '2.1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'xcode'
 
 
 # List of patterns, relative to source directory, that match files and
@@ -60,3 +60,13 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# manual pages options
+man_pages = [(
+    'manpage',
+    'monitor',
+    'system resource monitoring and telemetry',
+    'Geoffrey Lentner <glentner@purdue.edu>.',
+    '1'
+),
+]

@@ -6,7 +6,7 @@ Roadmap
 -------
 
 * Integrate additional GPU providers.
-* Explore additional resources (e.g., filesystem).
+* Explore additional resources (e.g., filesystem, threads).
 
 
 Contributing

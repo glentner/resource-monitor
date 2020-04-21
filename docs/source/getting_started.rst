@@ -18,7 +18,7 @@ Currently, only NVIDIA is implemented (using ``nvidia-smi``).
 Basic Usage
 -----------
 
-The usage statement for each resource type is outlines below. The ``--help`` flag is
+The usage statement for each resource type is outlined below. The ``--help`` flag is
 provided at each level. ``monitor --help`` will show the device groups (i.e., cpu/gpu).
 ``monitor <device> --help`` will show available resources for that group.
 

@@ -20,7 +20,7 @@ with open('README.rst', mode='r') as readme:
 
 setup(
     name                 = 'resource-monitor',
-    version              = '2.1.1',
+    version              = '2.1.2',
     author               = 'Geoffrey Lentner',
     author_email         = 'glentner@purdue.edu',
     description          = 'A simple cross-platform system resource monitor.',

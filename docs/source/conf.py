@@ -22,7 +22,7 @@ copyright = '2019 Geoffrey Lentner'
 author = 'Geoffrey Lentner'
 
 # The full version, including alpha/beta/rc tags
-release = '2.1.1'
+release = '2.1.2'
 
 
 # -- General configuration ---------------------------------------------------

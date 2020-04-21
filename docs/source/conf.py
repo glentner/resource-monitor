@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Resource Monitor'
-copyright = '2020 Geoffrey Lentner'
+copyright = '2019 Geoffrey Lentner'
 author = 'Geoffrey Lentner'
 
 # The full version, including alpha/beta/rc tags

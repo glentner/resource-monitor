@@ -113,8 +113,8 @@ Monitor GPU utilization on a per-GPU basis on a 10 second interval and log to a 
 
 .. code-block:: none
 
-    $ monitor gpu percent --sample-rate 10 >gpu.memory.log
-    $ head -8 gpu.memory.log
+    $ monitor gpu percent --sample-rate 10 >gpu.percent.log
+    $ head -8 gpu.percent.log
 
     2020-01-30 13:04:22.938 node-001.cluster monitor.gpu.percent [0] 79.0
     2020-01-30 13:04:22.938 node-001.cluster monitor.gpu.percent [1] 0.0
@@ -167,7 +167,7 @@ Recommendations
 ---------------
 
 * If collecting data for benchmarking/profiling/scaling purposes (regarding CPU/memory in particular),
-  it may be appropriate to also collect data in the absense of your application as a null-scenario.
+  it may be appropriate to also collect data in the absence of your application as a null-scenario.
   This can approximate a "background noise" that can modeled and subtracted.
 
 

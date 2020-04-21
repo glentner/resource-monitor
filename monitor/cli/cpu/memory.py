@@ -85,8 +85,8 @@ class CPUMemory(Application):
     ALLOW_NOARGS = True  # no usage behavior
     interface = Interface(PROGRAM, USAGE, HELP)
 
-    sample_rate: int = 1
-    interface.add_argument('-s', '--sample-rate', type=int, default=sample_rate)
+    sample_rate: float = 1
+    interface.add_argument('-s', '--sample-rate', type=float, default=sample_rate)
 
     human_readable: bool = False
     interface.add_argument('-H', '--human-readable', action='store_true')

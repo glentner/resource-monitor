@@ -11,8 +11,7 @@ pylint = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
 twine = "*"
-neovim = "*"
-pynvim = "*"
+bleach = ">=3.1.4"
 
 [packages]
 psutil = "*"

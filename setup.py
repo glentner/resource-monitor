@@ -13,11 +13,6 @@
 # standard libs
 from setuptools import setup, find_packages
 
-# metadata
-from monitor.__meta__ import (__version__, __authors__,
-                              __contact__, __license__, __description__,
-                              __keywords__, __website__)
-
 
 with open('README.rst', mode='r') as readme:
     long_description = readme.read()
@@ -25,13 +20,13 @@ with open('README.rst', mode='r') as readme:
 
 setup(
     name                 = 'resource-monitor',
-    version              = __version__,
-    author               = __authors__,
-    author_email         = __contact__,
-    description          = __description__,
-    license              = __license__,
-    keywords             = __keywords__,
-    url                  = __website__,
+    version              = '2.1.1',
+    author               = 'Geoffrey Lentner',
+    author_email         = 'glentner@purdue.edu',
+    description          = 'A simple cross-platform system resource monitor.',
+    license              = 'Apache Software License 2.0',
+    keywords             = 'cross-platform system resource-monitor telemetry utility command-line-tool',
+    url                  = 'https://resource-monitor.readthedocs.io',
     packages             = find_packages(),
     long_description     = long_description,
     classifiers          = ['Development Status :: 5 - Production/Stable',

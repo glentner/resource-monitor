@@ -86,8 +86,8 @@ class CPUPercent(Application):
     ALLOW_NOARGS = True
     interface = Interface(PROGRAM, USAGE, HELP)
 
-    sample_rate: int = 1
-    interface.add_argument('-s', '--sample-rate', type=int, default=sample_rate)
+    sample_rate: float = 1
+    interface.add_argument('-s', '--sample-rate', type=float, default=sample_rate)
 
     total: bool = False
     all_cores: bool = False

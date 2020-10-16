@@ -33,6 +33,7 @@ setup(
                             'Programming Language :: Python :: 3',
                             'Programming Language :: Python :: 3.7',
                             'Programming Language :: Python :: 3.8',
+                            'Programming Language :: Python :: 3.9',
                             'Operating System :: POSIX :: Linux',
                             'Operating System :: MacOS',
                             'Operating System :: Microsoft :: Windows',
@@ -42,10 +43,7 @@ setup(
                             'Topic :: System :: Monitoring',
                             ],
     entry_points         = {'console_scripts': ['monitor=monitor.cli:main']},
-    install_requires     = ['cmdkit>=1.2.1', 'logalpha>=2.0.2', 'psutil'],
-    extras_require       = {
-        'dev': ['ipython', 'pytest', 'hypothesis', 'pylint', 'sphinx',
-                'sphinx-rtd-theme', 'twine']},
+    install_requires     = ['cmdkit==1.5.5', 'logalpha==2.0.2', 'psutil>=5.7.2'],
     data_files = [
         ('share/man/man1', ['man/man1/monitor.1', ]),
     ],

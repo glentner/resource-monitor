@@ -39,7 +39,7 @@ RESET = colors.Color.reset
 
 
 # NOTE: global handler list lets `Logger.with_name` instances aware of changes
-#       to other logger's handlers. (i.e., changing from SimpleConsoleHandler to ConsoleHandler).
+#       to other logger's handlers.
 _handlers = []
 
 

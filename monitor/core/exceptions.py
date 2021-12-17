@@ -10,6 +10,7 @@
 
 """Exception handling for resource-monitor."""
 
+
 # type annotations
 from typing import Callable
 

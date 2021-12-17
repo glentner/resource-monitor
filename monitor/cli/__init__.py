@@ -10,6 +10,7 @@
 
 """Entry-point for resource-monitor."""
 
+
 # standard libs
 import sys
 import platform
@@ -43,12 +44,9 @@ DEVICES = {
 }
 
 PROGRAM = __appname__
-PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
-usage: {PROGRAM} <device> <resource> [<args>...]
-       {PADDING} [--help] [--version]
-
+usage: {PROGRAM} [-h] [-v] <device> <resource> [<args>...]
 {__description__}\
 """
 

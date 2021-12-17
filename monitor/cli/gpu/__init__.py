@@ -10,13 +10,14 @@
 
 """Monitor GPU resources."""
 
+
 # standard libs
 import sys
 
 # internal libs
 from ...core.logging import Logger
 from ...core.exceptions import CompletedCommand
-from ...__meta__ import __appname__, __copyright__, __license__, __website__
+from ...__meta__ import __appname__
 
 # external libs
 from cmdkit.app import Application
@@ -38,21 +39,10 @@ RESOURCES = {
 
 
 PROGRAM = f'{__appname__} gpu'
-PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
-usage: {PROGRAM} <resource> [<args>...]
-       {PADDING} [--help]
-
+usage: {PROGRAM} [-h] <resource> [<args>...]
 {__doc__}\
-"""
-
-EPILOG = f"""\
-Documentation and issue tracking at:
-{__website__}
-
-Copyright {__copyright__}
-{__license__}.\
 """
 
 HELP = f"""\
@@ -68,9 +58,7 @@ options:
 -h, --help         Show this message and exit.
 
 Use the -h/--help flag with the above resource groups to
-learn more about their usage.
-
-{EPILOG}\
+learn more about their usage.\
 """
 
 

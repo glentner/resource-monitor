@@ -18,7 +18,7 @@ import time
 import functools
 
 # internal libs
-from ...core.stat import NvidiaStat
+from ...core.stat import NvidiaMemory
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
 from ...__meta__ import __appname__, __copyright__, __website__, __license__
@@ -102,6 +102,6 @@ class GPUMemory(Application):
 
         while True:
             time.sleep(self.sample_rate)
-            stat = NvidiaStat.from_cmd()
-            for gpu_id, gpu_memory in enumerate(stat.memory):
+            stat = NvidiaMemory.from_cmd()
+            for gpu_id, gpu_memory in stat.data['memory'].items():
                 log.debug(f'[{gpu_id}] {gpu_memory}')

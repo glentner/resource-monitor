@@ -8,7 +8,8 @@
 # You should have received a copy of the Apache License along with this program.
 # If not, see <https://www.apache.org/licenses/LICENSE-2.0>.
 
-"""Monitor GPU power consumption (percent maximum)."""
+"""Monitor GPU power consumption (in Watts)."""
+
 
 # type annotations
 from __future__ import annotations
@@ -18,7 +19,7 @@ import time
 import functools
 
 # internal libs
-from ...core.stat import NvidiaStat
+from ...core.stat import NvidiaPower
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
 from ...__meta__ import __appname__, __copyright__, __website__, __license__
@@ -102,6 +103,6 @@ class GPUPower(Application):
 
         while True:
             time.sleep(self.sample_rate)
-            stat = NvidiaStat.from_cmd()
-            for gpu_id, gpu_power in enumerate(stat.power):
+            stat = NvidiaPower.from_cmd()
+            for gpu_id, gpu_power in stat.data['power'].items():
                 log.debug(f'[{gpu_id}] {gpu_power}')

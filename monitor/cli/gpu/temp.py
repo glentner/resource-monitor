@@ -18,7 +18,7 @@ import time
 import functools
 
 # internal libs
-from ...core.stat import NvidiaStat
+from ...core.stat import NvidiaTemperature
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
 from ...__meta__ import __appname__, __copyright__, __website__, __license__
@@ -102,6 +102,6 @@ class GPUTemp(Application):
 
         while True:
             time.sleep(self.sample_rate)
-            stat = NvidiaStat.from_cmd()
-            for gpu_id, gpu_temp in enumerate(stat.temp):
+            stat = NvidiaTemperature.from_cmd()
+            for gpu_id, gpu_temp in stat.data['temp'].items():
                 log.debug(f'[{gpu_id}] {gpu_temp}')

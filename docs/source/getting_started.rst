@@ -30,12 +30,9 @@ CPU Percent
 ^^^^^^^^^^^
 
 .. code-block:: none 
-    :emphasize-lines: 1-3
+    :emphasize-lines: 1-2
 
-    usage: monitor cpu percent [--total | --all-cores] [--sample-rate SECONDS]
-                               [--plain | --csv [--no-header]]
-                               [--help]
-
+    usage: monitor cpu percent [-h] [--all-cores] [-s SECONDS] [--csv [--no-header]]
     Monitor CPU percent utilization.
 
     options:
@@ -52,12 +49,9 @@ CPU Memory
 ^^^^^^^^^^
 
 .. code-block:: none
-    :emphasize-lines: 1-3
+    :emphasize-lines: 1-2
 
-    usage: monitor cpu memory [--percent | --actual] [--sample-rate SECONDS] [--human-readable]
-                              [--plain | --csv [--no-header]]
-                              [--help]
-
+    usage: monitor cpu memory [-h] [-s SECONDS] [--actual [--human-readable]] [--csv [--no-header]]
     Monitor CPU memory utilization.
 
     options:
@@ -75,13 +69,10 @@ GPU Percent
 ^^^^^^^^^^^
 
 .. code-block:: none
-    :emphasize-lines: 1-3
+    :emphasize-lines: 1-2
 
-    usage: monitor gpu percent [--sample-rate SECONDS]
-                               [--plain | --csv [--no-header]]
-                               [--help]
-
-    Monitor GPU volatile utilization.
+    usage: monitor gpu percent [-h] [-s SECONDS] [--csv [--no-header]]
+    Monitor GPU percent utilization.
 
     options:
     -s, --sample-rate  SECONDS     Time between samples (default: 1).
@@ -95,12 +86,9 @@ GPU Memory
 ^^^^^^^^^^
 
 .. code-block:: none
-    :emphasize-lines: 1-3
+    :emphasize-lines: 1-2
 
-    usage: monitor gpu memory [--sample-rate SECONDS]
-                              [--plain | --csv [--no-header]]
-                              [--help]
-
+    usage: monitor gpu memory [-h] [-s SECONDS] [--csv [--no-header]]
     Monitor GPU memory utilization.
 
     options:
@@ -115,13 +103,10 @@ GPU Power
 ^^^^^^^^^
 
 .. code-block:: none
-    :emphasize-lines: 1-3
+    :emphasize-lines: 1-2
 
-    usage: monitor gpu power [--sample-rate SECONDS]
-                             [--plain | --csv [--no-header]]
-                             [--help]
-
-    Monitor GPU power consumption (percent maximum).
+    usage: monitor gpu power [-h] [-s SECONDS] [--csv [--no-header]]
+    Monitor GPU power consumption (in Watts).
 
     options:
     -s, --sample-rate  SECONDS     Time between samples (default: 1).
@@ -135,12 +120,9 @@ GPU Temperature
 ^^^^^^^^^^^^^^^
 
 .. code-block:: none
-    :emphasize-lines: 1-3
+    :emphasize-lines: 1-2
 
-    usage: monitor gpu temp [--sample-rate SECONDS]
-                            [--plain | --csv [--no-header]]
-                            [--help]
-
+    usage: monitor gpu temp [-h] [-s SECONDS] [--csv [--no-header]]
     Monitor GPU temperature (Celsius).
 
     options:

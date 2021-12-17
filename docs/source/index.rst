@@ -23,9 +23,7 @@ or higher is required, however.
 .. code-block:: none
 
     $ monitor
-    usage: monitor <device> <resource> [<args>...]
-                   [--help] [--version]
-
+    usage: monitor [-h] [-v] <device> <resource> [<args>...]
     A simple cross-platform system resource monitor.
 
 .. code-block:: none

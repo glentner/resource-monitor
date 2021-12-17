@@ -11,9 +11,17 @@ A simple cross-platform system resource monitor.
     :target: https://pypi.org/project/resource-monitor
     :alt: Latest Release
 
+.. image:: https://img.shields.io/pypi/pyversions/resource-monitor.svg?logo=python&logoColor=white&style=flat
+    :target: https://pypi.org/project/resource-monitor
+    :alt: Python Versions
+
 .. image:: https://readthedocs.org/projects/resource-monitor/badge/?version=latest
     :target: https://resource-monitor.readthedocs.io
     :alt: Documentation
+
+.. image:: https://pepy.tech/badge/resource-monitor
+    :target: https://pepy.tech/badge/resource-monitor
+    :alt: Downloads
 
 
 Installation

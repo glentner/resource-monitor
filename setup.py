@@ -10,23 +10,33 @@
 
 """Setup and installation script for resource-monitor."""
 
+
 # standard libs
+import re
 from setuptools import setup, find_packages
 
 
+# load description from file
 with open('README.rst', mode='r') as readme:
     long_description = readme.read()
 
 
+# load metadata by parsing __init__ module
+with open('monitor/__init__.py', mode='r') as source:
+    content = source.read().strip()
+    metadata = {key: re.search(key + r'\s*=\s*[\'"]([^\'"]*)[\'"]', content).group(1)
+                for key in ['__version__', '__authors__', '__contact__', '__license__',
+                            '__website__', '__description__', '__keywords__', ]}
+
 setup(
     name                 = 'resource-monitor',
-    version              = '2.1.3',
-    author               = 'Geoffrey Lentner',
-    author_email         = 'glentner@purdue.edu',
-    description          = 'A simple cross-platform system resource monitor.',
-    license              = 'Apache Software License 2.0',
-    keywords             = 'cross-platform system resource-monitor telemetry utility command-line-tool',
-    url                  = 'https://resource-monitor.readthedocs.io',
+    version              = metadata['__version__'],
+    author               = metadata['__authors__'],
+    author_email         = metadata['__contact__'],
+    description          = metadata['__description__'],
+    license              = metadata['__license__'],
+    keywords             = metadata['__keywords__'],
+    url                  = metadata['__website__'],
     packages             = find_packages(),
     long_description     = long_description,
     classifiers          = ['Development Status :: 5 - Production/Stable',
@@ -34,6 +44,7 @@ setup(
                             'Programming Language :: Python :: 3.7',
                             'Programming Language :: Python :: 3.8',
                             'Programming Language :: Python :: 3.9',
+                            'Programming Language :: Python :: 3.10',
                             'Operating System :: POSIX :: Linux',
                             'Operating System :: MacOS',
                             'Operating System :: Microsoft :: Windows',

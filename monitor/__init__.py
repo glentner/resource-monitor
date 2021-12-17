@@ -10,7 +10,14 @@
 
 """Initialization for resource-monitor."""
 
-# pylint: disable=W0611
-from .__meta__ import (__appname__, __version__, __authors__,
-                       __contact__, __license__,
-                       __copyright__, __description__)
+
+# package metadata
+__appname__     = 'monitor'
+__version__     = '2.2.0'
+__authors__     = 'Geoffrey Lentner'
+__contact__     = 'glentner@purdue.edu'
+__license__     = 'Apache Software License 2.0'
+__website__     = 'https://resource-monitor.readthedocs.io'
+__copyright__   = 'Geoffrey Lentner 2019. All rights reserved.'
+__description__ = 'A simple cross-platform system resource monitor.'
+__keywords__    = 'cross-platform system resource-monitor telemetry utility command-line-tool'

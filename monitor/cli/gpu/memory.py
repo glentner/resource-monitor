@@ -10,6 +10,7 @@
 
 """Monitor GPU memory utilization."""
 
+
 # type annotations
 from __future__ import annotations
 
@@ -18,10 +19,10 @@ import time
 import functools
 
 # internal libs
-from ...core.stat import NvidiaStat
+from ...core.stat import NvidiaMemory
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ...__meta__ import __appname__, __copyright__, __website__, __license__
+from ... import __appname__
 
 # external libs
 from cmdkit.app import Application, exit_status
@@ -29,22 +30,10 @@ from cmdkit.cli import Interface, ArgumentError
 
 
 PROGRAM = f'{__appname__} gpu memory'
-PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
-usage: {PROGRAM} [--sample-rate SECONDS]
-       {PADDING} [--plain | --csv [--no-header]]
-       {PADDING} [--help]
-
+usage: {PROGRAM} [-h] [-s SECONDS] [--csv [--no-header]]
 {__doc__}\
-"""
-
-EPILOG = f"""\
-Documentation and issue tracking at:
-{__website__}
-
-Copyright {__copyright__}
-{__license__}.\
 """
 
 HELP = f"""\
@@ -55,13 +44,10 @@ options:
     --plain                    Print messages in syslog format (default).
     --csv                      Print messages in CSV format.
     --no-header                Suppress printing header in CSV mode.
--h, --help                     Show this message and exit.
-
-{EPILOG}\
+-h, --help                     Show this message and exit.\
 """
 
 
-# initialize module level logger
 log = Logger.with_name('gpu.memory')
 
 
@@ -102,6 +88,6 @@ class GPUMemory(Application):
 
         while True:
             time.sleep(self.sample_rate)
-            stat = NvidiaStat.from_cmd()
-            for gpu_id, gpu_memory in enumerate(stat.memory):
+            stat = NvidiaMemory.from_cmd()
+            for gpu_id, gpu_memory in stat.data['memory'].items():
                 log.debug(f'[{gpu_id}] {gpu_memory}')

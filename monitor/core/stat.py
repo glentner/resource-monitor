@@ -10,29 +10,41 @@
 
 """Implementation of StatBase class."""
 
+
 # type annotations
 from __future__ import annotations
-from typing import Mapping, Union, List, Dict, Any
+from typing import Mapping, Union, List, Dict, TypeVar
 
 # standard library
-from abc import ABC as Abstract, abstractclassmethod
+from abc import ABC, abstractclassmethod
 from subprocess import check_output
-from datetime import datetime
 
 
-class StatBase(Abstract):
+T = TypeVar('T', int, float, List[float], Dict[int, float])
+
+class StatBase(ABC):
     """Structured object from text-block."""
 
     _cmd: str = None
-    _fields: List[str] = []
+    _data: Dict[str, T]
 
     def __init__(self, other: Union[Mapping, StatBase]) -> None:
         """Initialize directly from initial object."""
-        for key, value in dict(other).items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-            else:
-                raise AttributeError(f'{self.__class__.__name__} has no attribute "{key}"')
+        self.data = other if not isinstance(other, StatBase) else other.data
+
+    @property
+    def data(self) -> Dict[str, T]:
+        return self._data
+
+    @data.setter
+    def data(self, other: Dict[str, T]) -> None:
+        self._data = dict(other)
+
+    @classmethod
+    def from_cmd(cls) -> StatBase:
+        """Execute `_cmd` in a subprocess and parse text block."""
+        block = check_output(cls._cmd, shell=True).decode()
+        return cls.from_text(block)
 
     @classmethod
     def from_text(cls, block: str) -> StatBase:
@@ -40,127 +52,78 @@ class StatBase(Abstract):
         attrs = cls.parse_text(block)
         return cls(attrs)
 
-    @classmethod
-    def from_cmd(cls, cmd: str = _cmd, shell: bool = False) -> StatBase:
-        """Execute `cmd` in a subprocess and parse text block."""
-        block = check_output(cmd, shell=shell).decode()
-        return cls.from_text(block)
-
     @abstractclassmethod
     def parse_text(cls, block: str) -> Mapping:
         """Parse the text `block` and return attributes."""
 
-    def keys(self) -> List[str]:
-        """List of fields."""
-        return self._fields
-
-    def values(self) -> List[Any]:
-        """List of values of fields."""
-        return [getattr(self, field) for field in self._fields]
-
-    def __getitem__(self, key: str) -> Any:
-        """Access to attribute by key allows dict conversion."""
-        return getattr(self, key)
-
     def __str__(self) -> str:
         """String representation."""
-        mappable = dict(self)
-        return f'{self.__class__.__name__}({mappable})'
+        return str(self._data)
 
     def __repr__(self) -> str:
-        """String representation."""
-        return str(self)
+        """Interactive representation."""
+        return f'{self.__class__.__name__}({self._data})'
 
 
-class GPUStat(StatBase):
-    """Status object for GPU resource utilization."""
-
-    # one per GPU
-    temp: List[float] = None
-    power: List[float] = None
-    usage: List[float] = None
-    memory: List[float] = None
-    _fields = ['temp', 'power', 'usage', 'memory']
+class NvidiaStat(StatBase, ABC):
+    """Status object for Nvidia GPU resource."""
 
 
-NVIDIA_OUTER = '+-----------------------------------------------------------------------------+'
-NVIDIA_TOP_HLINE = '|-------------------------------+----------------------+----------------------+'
-NVIDIA_INNER_SINGLE = '+-------------------------------+----------------------+----------------------+'
-NVIDIA_INNER_DOUBLE = '|===============================+======================+======================|'
+class NvidiaPercent(NvidiaStat):
+    """Parse nvidia-smi for overall percent utilization."""
 
-class NvidiaStat(GPUStat):
-    """Create GPU stat from `nvidia-smi` command."""
-
-    _cmd: str = 'nvidia-smi'
+    _cmd: str = 'nvidia-smi --format=csv,noheader,nounits --query-gpu=index,utilization.gpu -c1'
 
     @classmethod
-    def from_cmd(cls) -> NvidiaStat:
-        """Run nvidia-smi to get stats."""
-        return super().from_cmd('nvidia-smi')
-
-    @classmethod
-    def parse_text(cls, block: str) -> Dict[str, List[float]]:
+    def parse_text(cls, block: str) -> Dict[str, Dict[int, float]]:
         """Parse `nvidia-smi` output."""
+        data = {}
+        for line in block.strip().split('\n'):
+            index, percent = map(float, line.strip().split(', '))
+            data[int(index)] = percent
+        return {'percent': data}
 
-        lines = block.strip().split('\n')
 
-        timestamp    = lines[0].strip()
-        upper_border = lines[1].strip()
-        upper_header = lines[2].strip()
-        first_hline  = lines[3].strip()
-        header_1     = lines[4].strip()
-        header_2     = lines[5].strip()
-        middle_hline = lines[6].strip()
+class NvidiaMemory(NvidiaStat):
+    """Parse nvidia-smi for memory usage."""
 
-        i = 7
-        top_lines = []
-        num_lines = []
-        while True:
-            top_lines.append(lines[i])
-            num_lines.append(lines[i+1])
-            if not lines[i+3].strip():
-                break
-            else:
-                i += 3
+    _cmd: str = 'nvidia-smi --format=csv,noheader,nounits --query-gpu=index,memory.used,memory.total -c1'
 
-        try:
-            datetime.strptime(timestamp, '%a %b %d %H:%M:%S %Y')
-            assert upper_border == NVIDIA_OUTER
-            assert first_hline  == NVIDIA_TOP_HLINE
-            assert middle_hline == NVIDIA_INNER_DOUBLE
-            assert len(upper_header.split()) == 10
-            assert len(header_1.split()) == 11
-            assert len(header_2.split()) == 11
+    @classmethod
+    def parse_text(cls, block: str) -> Dict[str, Dict[int, float]]:
+        """Parse `nvidia-smi` output."""
+        data = {}
+        for line in block.strip().split('\n'):
+            index, current, total = map(float, line.strip().split(', '))
+            data[int(index)] = current / total
+        return {'memory': data}
 
-            for top_line, num_line in zip(top_lines, num_lines):
-                assert len(top_line.split()) == 11
-                assert len(num_line.split()) == 15
 
-            temp = []
-            power = []
-            usage = []
-            memory = []
-            for line in num_lines:
-                fields = line.split()
+class NvidiaTemperature(NvidiaStat):
+    """Parse nvidia-smi for GPU temperature (in degrees C)."""
 
-                assert fields[2].endswith('C')
-                assert all(f.endswith('W') for f in fields[4:7:2])
-                assert all(f.endswith('MiB') for f in fields[8:11:2])
-                assert fields[12].endswith('%')
+    _cmd: str = 'nvidia-smi --format=csv,noheader,nounits --query-gpu=index,temperature.gpu -c1'
 
-                temp.append(int(fields[2][:-1]))  # strip 'C'
+    @classmethod
+    def parse_text(cls, block: str) -> Dict[str, Dict[int, float]]:
+        """Parse `nvidia-smi` output."""
+        data = {}
+        for line in block.strip().split('\n'):
+            index, temp = map(float, line.strip().split(', '))
+            data[int(index)] = temp
+        return {'temp': data}
 
-                lo_pow, hi_pow = [int(f[:-1]) for f in  fields[4:7:2]]
-                power.append(100 * lo_pow / hi_pow)
 
-                lo_mem, hi_mem = [int(f[:-3]) for f in  fields[8:11:2]]
-                mem = 100 * lo_mem / hi_mem
-                memory.append(float(f'{mem:.2f}'))
+class NvidiaPower(NvidiaStat):
+    """Parse nvidia-smi for GPU total power draw (in Watts +/- 5 Watts)."""
 
-                usage.append(float(fields[12][:-1]))
+    _cmd: str = 'nvidia-smi --format=csv,noheader,nounits --query-gpu=index,power.draw -c1'
 
-        except (AssertionError, ValueError):
-            raise RuntimeError('nvidia-smi had unrecognized formatting')
-
-        return {'temp': temp, 'power': power,
-                'usage': usage, 'memory': memory}
+    @classmethod
+    def parse_text(cls, block: str) -> Dict[str, Dict[int, float]]:
+        """Parse `nvidia-smi` output."""
+        data = {}
+        for line in block.strip().split('\n'):
+            index, power = map(float, line.strip().split(', '))
+            data[int(index)] = power
+        return {'power': data}

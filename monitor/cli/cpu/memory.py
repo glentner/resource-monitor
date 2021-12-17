@@ -10,6 +10,7 @@
 
 """Monitor CPU memory utilization."""
 
+
 # type annotations
 from __future__ import annotations
 
@@ -20,7 +21,7 @@ import functools
 # internal libs
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ...__meta__ import __appname__, __copyright__, __website__, __license__
+from ... import __appname__
 
 # external libs
 import psutil
@@ -29,22 +30,10 @@ from cmdkit.cli import Interface, ArgumentError
 
 
 PROGRAM = f'{__appname__} cpu memory'
-PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
-usage: {PROGRAM} [--percent | --actual] [--sample-rate SECONDS] [--human-readable]
-       {PADDING} [--plain | --csv [--no-header]]
-       {PADDING} [--help]
-
+usage: {PROGRAM} [-h] [-s SECONDS] [--actual [--human-readable]] [--csv [--no-header]]
 {__doc__}\
-"""
-
-EPILOG = f"""\
-Documentation and issue tracking at:
-{__website__}
-
-Copyright {__copyright__}
-{__license__}.\
 """
 
 HELP = f"""\
@@ -58,13 +47,10 @@ options:
     --plain                     Print messages in syslog format (default).
     --csv                       Print messages in CSV format.
     --no-header                 Suppress printing header in CSV mode.
--h, --help                      Show this message and exit.
-
-{EPILOG}\
+-h, --help                      Show this message and exit.\
 """
 
 
-# initialize module level logger
 log = Logger.with_name('cpu.memory')
 
 

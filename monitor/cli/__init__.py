@@ -26,8 +26,8 @@ else:
 # internal libs
 from ..core.logging import Logger
 from ..core.exceptions import CompletedCommand
-from ..__meta__ import (__appname__, __version__, __description__,
-                        __copyright__, __license__, __website__)
+from .. import (__appname__, __version__, __description__,
+                __copyright__, __license__, __website__)
 
 # external libs
 from cmdkit.app import Application

@@ -10,6 +10,7 @@
 
 """Implementation of StatBase class."""
 
+
 # type annotations
 from __future__ import annotations
 from typing import Mapping, Union, List, Dict, TypeVar

@@ -27,7 +27,7 @@ from logalpha import levels, colors, messages, handlers, loggers
 from cmdkit import logging as _cmdkit_logging
 
 # internal library
-from ..__meta__ import __appname__
+from .. import __appname__
 
 
 # get hostname from `socket` instead of `.config`

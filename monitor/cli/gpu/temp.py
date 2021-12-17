@@ -22,7 +22,7 @@ import functools
 from ...core.stat import NvidiaTemperature
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ...__meta__ import __appname__
+from ... import __appname__
 
 # external libs
 from cmdkit.app import Application, exit_status

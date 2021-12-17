@@ -1,8 +1,5 @@
 .\" Man page generated from reStructuredText.
 .
-.TH "MONITOR" "1" "Apr 21, 2020" "" "Resource Monitor"
-.SH NAME
-monitor \- system resource monitoring and telemetry
 .
 .nr rst2man-indent-level 0
 .
@@ -30,6 +27,9 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
+.TH "MONITOR" "1" "Dec 17, 2021" "2.1.3" "Resource Monitor"
+.SH NAME
+monitor \- system resource monitoring and telemetry
 .SH SYNOPSIS
 .sp
 monitor \fIdevice\fP \fIresource\fP [\-\-sample\-rate \fISECONDS\fP] [\-\-csv [\-\-no\-header]]
@@ -47,10 +47,10 @@ possible invocations and associated specific options.
 Collect telemetry on CPU core utilization.
 .INDENT 7.0
 .TP
-.B \-\-total
+.B  \-\-total
 Report metrics as a total across all cores (default).
 .TP
-.B \-\-all\-cores
+.B  \-\-all\-cores
 Report metrics on a per\-core basis.
 .UNINDENT
 .TP
@@ -58,13 +58,13 @@ Report metrics on a per\-core basis.
 Collect telemetry on CPU memory utilization.
 .INDENT 7.0
 .TP
-.B \-\-percent
+.B  \-\-percent
 Report metrics as a percent of total available memory (default).
 .TP
-.B \-\-actual
+.B  \-\-actual
 Report metrics as actual memory allocated (in bytes).
 .TP
-.B \-H\fP,\fB  \-\-human\-readable
+.B  \-H\fP,\fB  \-\-human\-readable
 Report metrics in a human readable format with units (e.g., "8.2G").
 .UNINDENT
 .TP
@@ -90,25 +90,25 @@ The time interval between consecutive samples (default: 1 second).
 .UNINDENT
 .INDENT 0.0
 .TP
-.B \-\-plain
+.B  \-\-plain
 Print messages in log format (default).
 .TP
-.B \-\-csv
+.B  \-\-csv
 Print messages in CSV format. The header is automatically included in the first line
 of output. The field names are consistent between resource types with the exception
 of the last one or two fields. For the \fB\-\-all\-cores\fP option with "cpu" and any
 of the "gpu" resources, a \fBcpu_id\fP or \fBgpu_id\fP is included. The last column is
 specific to the resource being monitored. See also: \fB\-\-no\-header\fP\&.
 .TP
-.B \-\-no\-header
+.B  \-\-no\-header
 Suppress printing the header in CSV mode (see \fB\-\-csv\fP). This is useful when
 appending data to a single file from one or more sources. See the distributed
 computing examples below.
 .TP
-.B \-h\fP,\fB  \-\-help
+.B  \-h\fP,\fB  \-\-help
 Show help message and exit.
 .TP
-.B \-v\fP,\fB  \-\-version
+.B  \-v\fP,\fB  \-\-version
 Show the version number and exit.
 .UNINDENT
 .SH EXAMPLES

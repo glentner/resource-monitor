@@ -10,6 +10,7 @@
 
 """Logging configuration for resource-monitor."""
 
+
 # type annotations
 from __future__ import annotations
 from typing import List, Callable
@@ -33,8 +34,8 @@ from ..__meta__ import __appname__
 HOSTNAME = socket.gethostname()
 
 # NOTICE messages won't actually be formatted with color.
-LEVELS = levels.Level.from_names(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])
-COLORS = colors.Color.from_names(['blue', 'green', 'yellow', 'red', 'magenta'])
+LEVELS = levels.Level.from_names(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])  # noqa: typing is broken
+COLORS = colors.Color.from_names(['blue', 'green', 'yellow', 'red', 'magenta'])  # noqa: typing is broken
 RESET = colors.Color.reset
 
 
@@ -88,8 +89,8 @@ class BasicHandler(handlers.Handler):
 
     def format(self, msg: Message) -> str:
         """Colorize the log level and with only the message."""
-        COLOR = Logger.colors[msg.level.value].foreground
-        return f'{COLOR}{msg.level.name.lower():<8}{RESET} {msg.content}'
+        color = Logger.colors[msg.level.value].foreground
+        return f'{color}{msg.level.name.lower():<8}{RESET} {msg.content}'
 
 
 @dataclass

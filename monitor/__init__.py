@@ -10,7 +10,6 @@
 
 """Initialization for resource-monitor."""
 
-# pylint: disable=W0611
-from .__meta__ import (__appname__, __version__, __authors__,
-                       __contact__, __license__,
-                       __copyright__, __description__)
+
+# internal libs
+from .__meta__ import __version__  # noqa: unused imports

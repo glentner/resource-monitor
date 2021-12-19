@@ -14,6 +14,9 @@
 # type annotations
 from typing import Callable
 
+# public interface
+__all__ = ['CompletedCommand', 'log_and_exit', ]
+
 
 class CompletedCommand(Exception):
     """Lift exit_status of sub-commands `main` method."""

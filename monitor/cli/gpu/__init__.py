@@ -14,20 +14,23 @@
 # standard libs
 import sys
 
+# external libs
+from cmdkit.app import Application
+from cmdkit.cli import Interface, ArgumentError
+
 # internal libs
 from ... import __appname__
 from ...core.logging import Logger
 from ...core.exceptions import CompletedCommand
-
-# external libs
-from cmdkit.app import Application
-from cmdkit.cli import Interface, ArgumentError
 
 # resource commands
 from .percent import GPUPercent
 from .memory import GPUMemory
 from .power import GPUPower
 from .temp import GPUTemp
+
+# public interface
+__all__ = ['GPUDevice', ]
 
 
 RESOURCES = {

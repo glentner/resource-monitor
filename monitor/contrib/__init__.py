@@ -24,6 +24,9 @@ from ..core.extern import ExternalMetric
 from .nvidia import NvidiaPercent, NvidiaMemory, NvidiaTemperature, NvidiaPower
 from .rocm import RocmPercent, RocmMemory, RocmTemperature, RocmPower
 
+# public interface
+__all__ = ['SMIData', ]
+
 
 class SMIData:
     """High-level interface to external smi tool for GPU telemetry."""

@@ -22,6 +22,9 @@ from abc import ABC
 # internal libs
 from ..core.extern import ExternalMetric
 
+# public interface
+__all__ = ['RocmMetric', 'RocmPercent', 'RocmMemory', 'RocmPower', 'RocmTemperature', ]
+
 
 class RocmMetric(ExternalMetric, ABC):
     """Run rocm-smi to collect metrics on GPU usage."""

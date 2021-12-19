@@ -18,15 +18,18 @@ from __future__ import annotations
 import time
 import functools
 
+# external libs
+from cmdkit.app import Application, exit_status
+from cmdkit.cli import Interface, ArgumentError
+
 # internal libs
 from ... import __appname__
 from ...contrib import SMIData
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
 
-# external libs
-from cmdkit.app import Application, exit_status
-from cmdkit.cli import Interface, ArgumentError
+# public interface
+__all__ = ['GPUMemory', ]
 
 
 PROGRAM = f'{__appname__} gpu memory'

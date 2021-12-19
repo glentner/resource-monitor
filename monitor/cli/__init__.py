@@ -23,19 +23,22 @@ else:
     from signal import signal, SIGPIPE, SIG_DFL
     signal(SIGPIPE, SIG_DFL)
 
+# external libs
+from cmdkit.app import Application
+from cmdkit.cli import Interface, ArgumentError
+
 # internal libs
 from ..core.logging import Logger
 from ..core.exceptions import CompletedCommand
 from .. import (__appname__, __version__, __description__,
                 __copyright__, __license__, __website__)
 
-# external libs
-from cmdkit.app import Application
-from cmdkit.cli import Interface, ArgumentError
-
 # resource commands
 from .cpu import CPUDevice
 from .gpu import GPUDevice
+
+# public interface
+__all__ = ['ResourceMonitor', 'main', ]
 
 
 DEVICES = {

@@ -27,7 +27,7 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "MONITOR" "1" "Dec 17, 2021" "2.2.0" "Resource Monitor"
+.TH "MONITOR" "1" "Dec 19, 2021" "2.3.0" "Resource Monitor"
 .SH NAME
 monitor \- system resource monitoring and telemetry
 .SH SYNOPSIS
@@ -234,21 +234,20 @@ This can approximate a "background noise" that can modeled and subtracted.
 .SH CAVEATS
 .INDENT 0.0
 .IP \(bu 2
-\fBmonitor\fP merely samples data made available by other libraries or command line
+\fBmonitor\fP merely samples data made available by other libraries or command\-line
 tools. In the case of CPU resources the \fBpsutil\fP library in Python. In the case of
 GPU resources the output of the \fBnvidia\-smi\fP tool. Metrics are reported with regard
 to the whole system, NOT JUST YOUR APPLICATION.
 .IP \(bu 2
-For GPU resources, currently only NVIDIA GPUs are supported per \fBnvidia\-smi\fP\&.
-However, code has been included that makes it trivial to support additional resources
-that report via some command line invocation (i.e., some other GPU provider).
+For GPU resources, currently only \fBnvidia\-smi\fP and \fBrocm\-smi\fP are supported.
+Additional GPU providers could be supported in the future though.
 .IP \(bu 2
 Sampling more frequently than 1 second is an error. The CPU percent utilization is
 a time averaged metric subject to how frequently it is sampled.
 .UNINDENT
 .SH SEE ALSO
 .sp
-nvidia\-smi(1), head(1), mpiexec(1), sort(1)
+nvidia\-smi(1), rocm\-smi(1), head(1), mpiexec(1), sort(1)
 .SH AUTHOR
 Geoffrey Lentner <glentner@purdue.edu>.
 .SH COPYRIGHT

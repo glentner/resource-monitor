@@ -32,7 +32,7 @@ command line need only have a parser method implemented. For example:
 
 .. code-block:: python
 
-    class OpenFileStat(StatBase):
+    class OpenFileStat(ExternalMetric):
         """Report the number of open files."""
 
         count: int = None

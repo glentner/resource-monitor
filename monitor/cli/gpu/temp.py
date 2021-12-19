@@ -19,10 +19,10 @@ import time
 import functools
 
 # internal libs
-from ...core.stat import SMIData
+from ... import __appname__
+from ...contrib import SMIData
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ... import __appname__
 
 # external libs
 from cmdkit.app import Application, exit_status

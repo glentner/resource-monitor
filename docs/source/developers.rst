@@ -24,10 +24,12 @@ The **monitor** command-line interface is written in Python and uses the **psuti
 library. Additional resources may be possible to collect but may not necessarily be
 easily made cross-platform.
 
-The GPU functionality is simply a wrapper around command-line tools, currently just
-``nvidia-smi``. In the library, this has been implemented by a fully generalized notion
-of a *Status* object. In principle, anything that could conceivably be invoked on the
-command-line need only have a parser method implemented. For example:
+The GPU functionality is simply a wrapper external tools, e.g., ``nvidia-smi``.
+In the library, a fully generalized notion of an *ExternalMetric* interface is provided.
+In principle, anything that could conceivably be invoked on the
+command-line need only have a parser method implemented.
+
+For example:
 
 .. code-block:: python
 

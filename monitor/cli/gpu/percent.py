@@ -52,7 +52,7 @@ log = Logger.with_name('gpu.percent')
 
 
 class GPUPercent(Application):
-    """Monitor GPU volatile utilization."""
+    """Monitor GPU percent utilization."""
 
     ALLOW_NOARGS = True
     interface = Interface(PROGRAM, USAGE, HELP)

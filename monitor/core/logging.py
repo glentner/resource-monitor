@@ -29,11 +29,14 @@ from cmdkit import logging as _cmdkit_logging
 # internal library
 from .. import __appname__
 
+# public interface
+__all__ = ['HOSTNAME', 'Logger', 'PLAIN_HANDLER', 'CSV_HANDLER', ]
 
-# get hostname from `socket` instead of `.config`
+
+# cache hostname
 HOSTNAME = socket.gethostname()
 
-# NOTICE messages won't actually be formatted with color.
+
 LEVELS = levels.Level.from_names(['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'])  # noqa: typing is broken
 COLORS = colors.Color.from_names(['blue', 'green', 'yellow', 'red', 'magenta'])  # noqa: typing is broken
 RESET = colors.Color.reset
@@ -67,7 +70,7 @@ class Logger(loggers.Logger):
 
     @property
     def handlers(self) -> List[handlers.Handler]:
-        """Overide of local handlers to global list."""
+        """Override of local handlers to global list."""
         global _handlers
         return _handlers
 

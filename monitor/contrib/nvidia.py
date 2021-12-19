@@ -21,6 +21,9 @@ from abc import ABC
 # internal libs
 from ..core.extern import ExternalMetric
 
+# public interface
+__all__ = ['NvidiaMetric', 'NvidiaPercent', 'NvidiaMemory', 'NvidiaPower', 'NvidiaTemperature', ]
+
 
 class NvidiaMetric(ExternalMetric, ABC):
     """Status object for Nvidia GPU resource."""

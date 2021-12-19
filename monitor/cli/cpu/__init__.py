@@ -14,18 +14,21 @@
 # standard libs
 import sys
 
-# internal libs
-from ...core.logging import Logger
-from ...core.exceptions import CompletedCommand
-from ... import __appname__
-
 # external libs
 from cmdkit.app import Application
 from cmdkit.cli import Interface, ArgumentError
 
+# internal libs
+from ... import __appname__
+from ...core.logging import Logger
+from ...core.exceptions import CompletedCommand
+
 # resource commands
 from .percent import CPUPercent
 from .memory import CPUMemory
+
+# public interface
+__all__ = ['CPUDevice', ]
 
 
 RESOURCES = {

@@ -8,7 +8,7 @@
 # You should have received a copy of the Apache License along with this program.
 # If not, see <https://www.apache.org/licenses/LICENSE-2.0>.
 
-"""Stat class implementations for external tools (e.g., nvidia-smi, rocm-smi)."""
+"""Simple support for external metrics (subprocess call to external commands)."""
 
 
 # type annotations
@@ -19,9 +19,14 @@ from typing import Mapping, Union, List, Dict, TypeVar
 from abc import ABC, abstractclassmethod
 from subprocess import check_output
 
+# public interface
+__all__ = ['ExternalMetric', ]
+
+
 # value type for metrics
 # either individual value, a list, or indexed collection
 T = TypeVar('T', float, List[float], Dict[int, float])
+
 
 class ExternalMetric(ABC):
     """Structured object from text-block."""

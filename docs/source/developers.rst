@@ -39,7 +39,7 @@ For example:
         _cmd = 'lsof -u `whoami`'
 
         @classmethod
-        def parse_text(block: str) -> Dict[str, int]:
+        def parse_text(cls, block: str) -> Dict[str, int]:
             """Count lines in the output."""
             return {'count': len(block.strip().split('\n'))}
 

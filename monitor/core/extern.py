@@ -59,7 +59,7 @@ class ExternalMetric(ABC):
         return cls(attrs)
 
     @abstractclassmethod
-    def parse_text(cls, block: str) -> Mapping:
+    def parse_text(cls, block: str) -> Dict[str, T]:
         """Parse the text `block` and return attributes."""
 
     def __str__(self) -> str:

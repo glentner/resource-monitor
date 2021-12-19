@@ -19,7 +19,7 @@ import time
 import functools
 
 # internal libs
-from ...core.stat import NvidiaMemory
+from ...core.stat import SMIData
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
 from ... import __appname__
@@ -86,8 +86,8 @@ class GPUMemory(Application):
             if not self.no_header:
                 print('timestamp,hostname,resource,gpu_id,gpu_memory')
 
+        smi = SMIData()
         while True:
             time.sleep(self.sample_rate)
-            stat = NvidiaMemory.from_cmd()
-            for gpu_id, gpu_memory in stat.data['memory'].items():
+            for gpu_id, gpu_memory in smi.memory.items():
                 log.debug(f'[{gpu_id}] {gpu_memory}')

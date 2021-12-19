@@ -19,7 +19,7 @@ import time
 import functools
 
 # internal libs
-from ...core.stat import NvidiaPercent
+from ...core.stat import SMIData
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
 from ... import __appname__
@@ -86,8 +86,8 @@ class GPUPercent(Application):
             if not self.no_header:
                 print('timestamp,hostname,resource,gpu_id,gpu_percent')
 
+        smi = SMIData()
         while True:
             time.sleep(self.sample_rate)
-            stat = NvidiaPercent.from_cmd()
-            for gpu_id, gpu_percent in stat.data['percent'].items():
+            for gpu_id, gpu_percent in smi.percent.items():
                 log.debug(f'[{gpu_id}] {gpu_percent}')

@@ -19,10 +19,10 @@ import time
 import functools
 
 # internal libs
-from ...core.stat import NvidiaTemperature
+from ... import __appname__
+from ...contrib import SMIData
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ... import __appname__
 
 # external libs
 from cmdkit.app import Application, exit_status
@@ -86,8 +86,8 @@ class GPUTemp(Application):
             if not self.no_header:
                 print('timestamp,hostname,resource,gpu_id,gpu_temp')
 
+        smi = SMIData()
         while True:
             time.sleep(self.sample_rate)
-            stat = NvidiaTemperature.from_cmd()
-            for gpu_id, gpu_temp in stat.data['temp'].items():
+            for gpu_id, gpu_temp in smi.temp.items():
                 log.debug(f'[{gpu_id}] {gpu_temp}')

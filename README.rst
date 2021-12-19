@@ -37,6 +37,6 @@ For basic installation use Pip, other methods outlined via the documentation.
 Documentation
 -------------
 
-The command line interface is self-documenting with ``--help``. For detailed usage,
+The command-line interface is self-documenting with ``--help``. For detailed usage,
 see the manual page ``man monitor``. Documentation is also available online at
 `resource-monitor.readthedocs.io <https://resource-monitor.readthedocs.io>`_

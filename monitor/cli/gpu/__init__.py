@@ -15,9 +15,9 @@
 import sys
 
 # internal libs
+from ... import __appname__
 from ...core.logging import Logger
 from ...core.exceptions import CompletedCommand
-from ... import __appname__
 
 # external libs
 from cmdkit.app import Application

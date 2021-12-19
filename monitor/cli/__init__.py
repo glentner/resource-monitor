@@ -102,5 +102,5 @@ class ResourceMonitor(Application):
 
 
 def main() -> int:
-    """Entry-point for resource-monitor command line interface."""
+    """Entry-point for resource-monitor command-line interface."""
     return ResourceMonitor.main(sys.argv[1:2])

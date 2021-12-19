@@ -11,8 +11,8 @@ Installation
 
     pip install resource-monitor
 
-For use with GPUs you will need to have the associated command line tools installed.
-Currently, only NVIDIA is implemented (using ``nvidia-smi``).
+For use with GPUs you will need to have the associated command-line tools installed.
+Currently, Nvidia (using ``nvidia-smi``) and AMD (using ``rocm-smi``) are supported.
 
 
 Basic Usage
@@ -22,7 +22,7 @@ The usage statement for each resource type is outlined below. The ``--help`` fla
 provided at each level. ``monitor --help`` will show the device groups (i.e., cpu/gpu).
 ``monitor <device> --help`` will show available resources for that group.
 
-For complete information including examples at the command line, the manual page can be
+For complete information including examples at the command-line, the manual page can be
 accessed with ``man monitor``.
 
 

@@ -13,6 +13,8 @@
 
 # type annotations
 from __future__ import annotations
+from typing import Union, Callable
+from types import ModuleType
 
 # standard libs
 import time
@@ -24,9 +26,9 @@ from cmdkit.app import Application, exit_status
 from cmdkit.cli import Interface, ArgumentError
 
 # internal libs
+from ... import __appname__
 from ...core.exceptions import log_and_exit
 from ...core.logging import Logger, PLAIN_HANDLER, CSV_HANDLER
-from ... import __appname__
 
 # public interface
 __all__ = ['CPUPercent', ]
@@ -36,7 +38,7 @@ PROGRAM = f'{__appname__} cpu percent'
 PADDING = ' ' * len(PROGRAM)
 
 USAGE = f"""\
-usage: {PROGRAM} [-h] [--all-cores] [-s SECONDS] [--csv [--no-header]]
+usage: {PROGRAM} [-h] [PID] [--all-cores] [-s SECONDS] [--csv [--no-header]]
 {__doc__}\
 """
 
@@ -57,15 +59,21 @@ options:
 log = Logger.with_name('cpu.percent')
 
 
-def cpu_total(callback, template: str = '{value}') -> None:
+@functools.lru_cache(maxsize=None)
+def get_process(pid: int = None) -> Union[ModuleType, psutil.Process]:
+    """Registry of process handles."""
+    return psutil if not pid else psutil.Process(pid)
+
+
+def cpu_total(callback: Callable[[str, ], None], template: str = '{value:.4f}', pid: int = None) -> None:
     """Log the total CPU utilization."""
-    value = psutil.cpu_percent()
+    value = get_process(pid).cpu_percent()
     callback(template.format(value=value))
 
 
-def cpu_per_core(callback, template: str = '[{i}] {value}') -> None:
+def cpu_per_core(callback: Callable[[str, ], None], template: str = '[{i}] {value:.4f}', pid: int = None) -> None:
     """Log the CPU utilization per core."""
-    for i, value in enumerate(psutil.cpu_percent(percpu=True)):  # noqa: type iterable
+    for i, value in enumerate(get_process(pid).cpu_percent(percpu=True)):  # noqa: type iterable
         callback(template.format(i=i, value=value))
 
 
@@ -74,6 +82,9 @@ class CPUPercent(Application):
 
     ALLOW_NOARGS = True
     interface = Interface(PROGRAM, USAGE, HELP)
+
+    pid: int = None
+    interface.add_argument('pid', nargs='?', type=int, default=None)
 
     sample_rate: float = 1
     interface.add_argument('-s', '--sample-rate', type=float, default=sample_rate)
@@ -94,6 +105,8 @@ class CPUPercent(Application):
     interface.add_argument('--no-header', action='store_true')
 
     exceptions = {
+        psutil.NoSuchProcess: functools.partial(log_and_exit, logger=log.critical,
+                                                status=exit_status.runtime_error),
         RuntimeError: functools.partial(log_and_exit, logger=log.critical,
                                         status=exit_status.runtime_error),
     }
@@ -103,6 +116,9 @@ class CPUPercent(Application):
 
         if not self.format_csv and self.no_header:
             raise ArgumentError('--no-header only applies to --csv mode.')
+
+        if self.all_cores and self.pid:
+            raise ArgumentError('Cannot report per-cpu values given PID')
 
         log.handlers[0] = PLAIN_HANDLER
         if self.format_csv:
@@ -114,10 +130,37 @@ class CPUPercent(Application):
                     print('timestamp,hostname,resource,cpu_id,cpu_percent')
 
         if not self.all_cores:
-            log_usage = functools.partial(cpu_total, log.debug)
+            log_usage = functools.partial(cpu_total, callback=log.debug, pid=self.pid)
         else:
-            log_usage = functools.partial(cpu_per_core, log.debug)
+            log_usage = functools.partial(cpu_per_core, callback=log.debug, pid=self.pid)
 
         while True:
             time.sleep(self.sample_rate)
             log_usage()
+
+    @functools.cached_property
+    def process(self: CPUPercent) -> psutil.Process:
+        """Access single process or all process information."""
+        return psutil.Process(pid=self.pid)
+
+    def memory_percent(self: CPUPercent) -> float:
+        """Percent memory used by system or specific process."""
+        if not self.pid:
+            return psutil.virtual_memory().percent
+        else:
+            return (
+                    self.process.memory_percent() +
+                    sum(child.memory_percent() for child in self.process.children(recursive=True))
+            )
+
+    def memory_total(self: CPUPercent) -> float:
+        """Total memory used by system or specific process."""
+        if not self.pid:
+            return psutil.virtual_memory().used
+        else:
+            return (self.memory_percent() / 100) * psutil.virtual_memory().available
+
+    @functools.cached_property
+    def get_memory(self: CPUPercent) -> Callable[[], float]:
+        """Access appropriate method."""
+        return self.memory_percent if self.display_type == 'percent' else self.memory_total

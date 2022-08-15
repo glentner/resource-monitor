@@ -90,9 +90,9 @@ class CPUMemory(Application):
 
     display_type: str = 'percent'
     memory_interface = interface.add_mutually_exclusive_group()
-    memory_interface.add_argument('--actual', action='store_const', const='actual', dest='display_type')
     memory_interface.add_argument('--percent', action='store_const', const='percent',
                                   dest='display_type', default=display_type)
+    memory_interface.add_argument('--actual', action='store_const', const='actual', dest='display_type')
 
     format_type: str = 'plain'
     format_interface = interface.add_mutually_exclusive_group()
